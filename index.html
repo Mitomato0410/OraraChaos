@@ -346,14 +346,18 @@
     <script>
         // Firebase 初始化 (保持原本設定)
         const firebaseConfig = {
-            apiKey: "AIzaSyAZr1jc23-EdgzDxUVMdRn-ROZ8ZWS_L5k",
-            authDomain: "vtuber-ktv.firebaseapp.com",
-            projectId: "vtuber-ktv",
-            storageBucket: "vtuber-ktv.firebasestorage.app",
-            messagingSenderId: "570327519718",
-            appId: "1:570327519718:web:0db4c15b94e7cad34a0627",
-            databaseURL: "https://vtuber-ktv-default-rtdb.firebaseio.com"
+            apiKey: "AIzaSyCjD4h9SRyNWTnQLuuzvIyKoyh0TZ6yZNo",
+            authDomain: "orara-chaos.firebaseapp.com",
+            databaseURL: "https://orara-chaos-default-rtdb.firebaseio.com",
+            projectId: "orara-chaos",
+            storageBucket: "orara-chaos.firebasestorage.app",
+            messagingSenderId: "954432008502",
+            appId: "1:954432008502:web:34dc007e717b233cd44397",
+            measurementId: "G-M4XF8HVNYL"
         };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
