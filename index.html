@@ -260,9 +260,9 @@
 
             <!-- 搜尋與分類 -->
             <div class="section-card">
-                <input type="text" id="searchInput" class="search-input" placeholder="🔍 搜尋聖歌、魔曲、歌手或關鍵字...">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 搜尋歌名、歌手或關鍵字...">
                 <div id="filterButtons" class="flex gap-2 flex-wrap">
-                    <button class="filter-btn active" data-filter="all">全部樂章</button>
+                    <button class="filter-btn active" data-filter="all">全部分類</button>
                     <button class="filter-btn" data-filter="中文歌">中文</button>
                     <button class="filter-btn" data-filter="日文歌">日文</button>
                     <button class="filter-btn" data-filter="英文歌">英文</button>
@@ -281,9 +281,9 @@
                     <p class="text-xs text-zinc-400 mt-1">資料即時同步</p>
                 </div>
                 <div class="flex gap-2">
-                    <button class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="forceUpdate()">🔄 刷新天平</button>
-                    <button class="bg-stone-600 hover:bg-stone-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="clearDoneQueue()">🗑️ 淨化已唱紀錄</button>
-                    <button class="bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2 rounded-xl text-sm font-bold transition" onclick="openSongModal()">新增樂章 +</button>
+                    <button class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="forceUpdate()">🔄 刷新資訊</button>
+                    <button class="bg-stone-600 hover:bg-stone-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="clearDoneQueue()">🗑️ 清空已唱紀錄</button>
+                    <button class="bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2 rounded-xl text-sm font-bold transition" onclick="openSongModal()">新增歌曲 +</button>
                 </div>
             </div>
 
