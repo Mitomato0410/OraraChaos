@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕯️ 雙界唱禮 ‧ 半天半魔點歌殿堂 🗝️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="icon.png" type="image/png">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* 柔和黑白配色主題 */
+        body { 
+            font-family: 'Noto Serif TC', 'Cinzel', serif; 
+            background: linear-gradient(135deg, #1A1A1E 0%, #2D2D35 50%, #ECECF0 100%); 
+            background-attachment: fixed;
+            color: #2B2B2B; 
+            min-height: 100vh; 
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Header：光與影的交界 */
+        .header { 
+            text-align: center; 
+            padding: 45px 20px; 
+            background: linear-gradient(135deg, #141416 0%, #3F3F46 50%, #E4E4E7 100%); 
+            border-radius: 0 0 30px 30px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        .header h1 { 
+            font-family: 'Cinzel', 'Noto Serif TC', serif;
+            font-size: 2.3rem; 
+            font-weight: 700; 
+            color: #F4F4F5; 
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7); 
+            letter-spacing: 2px;
+        }
+        .header p {
+            color: #A1A1AA;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* 卡片設計：柔和半透明與高雅陰影 */
+        .section-card { 
+            background: rgba(255, 255, 255, 0.92); 
+            backdrop-filter: blur(10px);
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .search-input { 
+            width: 100%; 
+            padding: 12px 20px; 
+            border: 2px solid #E4E4E7; 
+            background: #FAFAFA;
+            border-radius: 15px; 
+            margin-bottom: 15px; 
+            outline: none; 
+            transition: 0.3s; 
+            color: #18181B;
+        }
+        .search-input:focus { 
+            border-color: #52525B; 
+            box-shadow: 0 0 12px rgba(82, 82, 91, 0.2); 
+            background: #FFFFFF;
+        }
+        
+        /* 篩選按鈕：雙色膠囊 */
+        .filter-btn { 
+            padding: 8px 20px; 
+            border: 2px solid #27272A; 
+            background: transparent; 
+            color: #27272A; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            letter-spacing: 1px;
+        }
+        .filter-btn.active, .filter-btn:hover { 
+            background: #27272A; 
+            color: #F4F4F5; 
+            box-shadow: 0 4px 12px rgba(39, 39, 42, 0.3);
+        }
+
+        /* 歌曲網格 */
+        .songs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .song-card { 
+            background: #FFFFFF; 
+            border-radius: 20px; 
+            padding: 25px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); 
+            border: 2px solid #F4F4F5; 
+            transition: all 0.3s ease; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .song-card:hover { 
+            transform: translateY(-5px); 
+            border-color: #18181B; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        .song-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #18181B;
+        }
+        
+        /* 點歌按鈕：黑白漸層（天使光+惡魔暗） */
+        .request-btn { 
+            width: 100%; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 15px; 
+            background: linear-gradient(135deg, #18181B 0%, #3F3F46 100%); 
+            color: #F4F4F5; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            transition: 0.3s; 
+            box-shadow: 0 4px 12px rgba(24, 24, 27, 0.3); 
+            letter-spacing: 1px;
+        }
+        .request-btn:hover {
+            background: linear-gradient(135deg, #27272A 0%, #52525B 100%);
+            box-shadow: 0 6px 15px rgba(24, 24, 27, 0.4);
+        }
+
+        /* 演唱狀態與呼吸燈 */
+        .status-singing { 
+            background: #18181B; 
+            color: #F4F4F5; 
+            animation: pulse-glowing 2s infinite; 
+            border-radius: 10px; 
+            padding: 4px 12px; 
+            font-weight: 600; 
+            font-size: 0.8rem;
+        }
+        @keyframes pulse-glowing { 
+            0%, 100% { box-shadow: 0 0 5px rgba(24, 24, 27, 0.4); opacity: 1; } 
+            50% { box-shadow: 0 0 15px rgba(24, 24, 27, 0.8); opacity: 0.85; } 
+        }
+
+        /* Modal 彈窗 */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(18, 18, 20, 0.75); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center; 
+            backdrop-filter: blur(8px); 
+        }
+        .modal.active { display: flex; }
+        .modal-content { 
+            background: #FFFFFF; 
+            border-radius: 25px; 
+            padding: 30px; 
+            max-width: 450px; 
+            width: 90%; 
+            border: 1px solid #E4E4E7;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .form-input { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #E4E4E7; 
+            background: #FAFAFA;
+            border-radius: 15px; 
+            margin-top: 10px; 
+            outline: none; 
+            transition: 0.3s;
+        }
+        .form-input:focus {
+            border-color: #18181B;
+            background: #FFFFFF;
+        }
+
+        /* 標籤 Tag */
+        .tag-chip { 
+            padding: 6px 15px; 
+            border: 2px solid #E4E4E7; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-size: 0.85rem; 
+            transition: 0.3s; 
+            color: #52525B;
+        }
+        .tag-checkbox { display: none; }
+        .tag-checkbox:checked + .tag-chip { 
+            background: #18181B; 
+            border-color: #18181B; 
+            color: #FFFFFF; 
+        }
+
+        /* Toast 訊息欄 */
+        .toast { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #18181B; 
+            color: #F4F4F5; 
+            padding: 12px 30px; 
+            border-radius: 50px; 
+            display: none; 
+            z-index: 3000; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header 頂欄 -->
+    <div class="header">
+        <h1 onclick="toggleMode()" style="cursor: pointer;" title="點擊切換管理模式">
+            ⚖️ 雙界唱禮 ‧ 點歌殿堂 🪶
+        </h1>
+        <p>「 光芒與暗影交織的樂章，今夜為誰而唱？ 」</p>
+    </div>
+
+    <!-- 主體內容 -->
+    <div class="container">
+        <!-- 觀眾視角 -->
+        <div id="audienceView">
+            
+            <!-- 目前排隊清單 -->
+            <div class="section-card">
+                <h3 class="font-bold mb-3 text-zinc-800 text-lg flex items-center gap-2">
+                    <span>📜</span> 祈願與契約 (排隊清單)
+                </h3>
+                <div id="queueList" class="space-y-2 text-zinc-500">載入中...</div>
+            </div>
+
+            <!-- 今日已演唱 -->
+            <div class="section-card bg-white/70">
+                <h3 class="font-bold mb-3 text-zinc-500 text-sm flex items-center cursor-pointer hover:text-zinc-800 transition" onclick="document.getElementById('doneList').classList.toggle('hidden')">
+                    <span>🕯️</span> 今日已詠唱樂章 (點擊展開/收合)
+                </h3>
+                <div id="doneList" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-zinc-500 hidden"></div>
+            </div>
+
+            <!-- 搜尋與分類 -->
+            <div class="section-card">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 搜尋聖歌、魔曲、歌手或關鍵字...">
+                <div id="filterButtons" class="flex gap-2 flex-wrap">
+                    <button class="filter-btn active" data-filter="all">全部樂章</button>
+                    <button class="filter-btn" data-filter="中文歌">中文</button>
+                    <button class="filter-btn" data-filter="日文歌">日文</button>
+                    <button class="filter-btn" data-filter="英文歌">英文</button>
+                </div>
+            </div>
+
+            <!-- 歌曲網格 -->
+            <div class="songs-grid" id="songsGrid"></div>
+        </div>
+
+        <!-- 管理後台視角 -->
+        <div id="managementView" style="display:none;">
+            <div class="bg-zinc-900 text-zinc-100 p-6 rounded-2xl mb-6 shadow-xl flex flex-wrap justify-between items-center gap-4 border border-zinc-700">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-2">⚖️ 審判與調和後台 👑</h2>
+                    <p class="text-xs text-zinc-400 mt-1">光暗天平平衡中 ‧ 資料即時同步</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="forceUpdate()">🔄 刷新天平</button>
+                    <button class="bg-stone-600 hover:bg-stone-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="clearDoneQueue()">🗑️ 淨化已唱紀錄</button>
+                    <button class="bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2 rounded-xl text-sm font-bold transition" onclick="openSongModal()">新增樂章 +</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
+                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800">📋 待詠唱清單 (點歌隊列)</h3>
+                    <div id="adminQueueList" class="space-y-4"></div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
+                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800">📖 雙界歌典典藏 (歌單庫)</h3>
+                    <div id="adminSongsList" class="space-y-1 text-sm overflow-y-auto max-h-[500px]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 點歌 Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold mb-1 text-zinc-900">詠唱祈願</h3>
+            <p class="text-xs text-zinc-400 mb-4">獻上你的名字與心聲，簽訂點歌契約。</p>
+            <p id="targetSongName" class="text-zinc-800 font-bold text-lg mb-2 p-3 bg-zinc-100 rounded-xl border border-zinc-200"></p>
+            <input type="text" id="requesterName" class="form-input" placeholder="你的名字 / 稱呼 (必填)">
+            <textarea id="requestMsg" class="form-input h-24 resize-none" placeholder="想對雙界歌者說的話 (選填)"></textarea>
+            <button class="request-btn" id="confirmRequestBtn">簽訂契約 ‧ 送出點歌 ✝️</button>
+            <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">取消</button>
+        </div>
+    </div>
+
+    <!-- 新增歌曲 Modal -->
+    <div class="modal" id="songEditModal">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold mb-4 text-zinc-900">新增樂章至典籍</h3>
+            <input type="text" id="editName" class="form-input" placeholder="歌名">
+            <input type="text" id="editArtist" class="form-input" placeholder="原唱 / 歌手">
+            <div class="mt-4 text-sm font-bold text-zinc-600">屬性分類：</div>
+            <div class="flex gap-2 mt-2">
+                <label><input type="checkbox" class="tag-checkbox" value="中文歌"><span class="tag-chip">中文</span></label>
+                <label><input type="checkbox" class="tag-checkbox" value="日文歌"><span class="tag-chip">日文</span></label>
+                <label><input type="checkbox" class="tag-checkbox" value="英文歌"><span class="tag-chip">英文</span></label>
+            </div>
+            <button class="request-btn" onclick="saveSong()">載入典冊</button>
+            <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">取消</button>
+        </div>
+    </div>
+
+    <!-- 密碼驗證 Modal -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold mb-2 text-zinc-900">管理者解鎖</h3>
+            <p class="text-xs text-zinc-400 mb-4">請輸入進入黑白後台之鑰匙密碼</p>
+            <input type="password" id="adminPwd" class="form-input" placeholder="請輸入管理密碼">
+            <button class="request-btn" onclick="checkPwd()">開啟通道</button>
+            <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">返回前台</button>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Firebase 初始化 (保持原本設定)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZr1jc23-EdgzDxUVMdRn-ROZ8ZWS_L5k",
+            authDomain: "vtuber-ktv.firebaseapp.com",
+            projectId: "vtuber-ktv",
+            storageBucket: "vtuber-ktv.firebasestorage.app",
+            messagingSenderId: "570327519718",
+            appId: "1:570327519718:web:0db4c15b94e7cad34a0627",
+            databaseURL: "https://vtuber-ktv-default-rtdb.firebaseio.com"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let songs = [];
+        let queue = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let isManagementMode = false;
+        let selectedSong = null;
+
+        // 監聽數據
+        db.ref('songs').on('value', snap => {
+            const val = snap.val();
+            songs = val ? Object.keys(val).map(k => ({...val[k], id: k})) : [];
+            render();
+        });
+
+        db.ref('queue').on('value', snap => {
+            const val = snap.val();
+            queue = val ? Object.keys(val).map(k => ({...val[k], id: k})) : [];
+            render();
+        });
+
+        function render() {
+            renderAudienceSongs();
+            renderAudienceQueue();
+            renderDoneList();
+            if(isManagementMode) { renderAdminSongs(); renderAdminQueue(); }
+        }
+
+        // 前台渲染：歌曲列表
+        function renderAudienceSongs() {
+            const grid = document.getElementById('songsGrid');
+            let filtered = songs.filter(s => !s.hidden);
+            if(currentFilter !== 'all') filtered = filtered.filter(s => s.tags && s.tags.includes(currentFilter));
+            if(searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(s => s.name.toLowerCase().includes(q) || (s.artist && s.artist.toLowerCase().includes(q)));
+            }
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-zinc-400">尚未尋得相符之樂章...</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(s => `
+                <div class="song-card">
+                    <div>
+                        <div class="song-name">${s.name}</div>
+                        <div class="text-zinc-400 text-sm mb-3">${s.artist || '未知吟唱者'}</div>
+                        <div class="flex gap-1 mb-3">${(s.tags || []).map(t => `<span class="px-2 py-0.5 bg-zinc-100 text-zinc-600 text-[10px] rounded-full border border-zinc-200">${t}</span>`).join('')}</div>
+                        <div class="text-[11px] text-zinc-400 flex items-center gap-1">🕊️ 累計詠唱：<span class="font-bold text-zinc-700">${s.count || 0}</span> 次</div>
+                    </div>
+                    <button class="request-btn" onclick="openRequestModal('${s.id}')">祈願點歌 ♪</button>
+                </div>
+            `).join('');
+        }
+
+        // 前台渲染：排隊隊列
+        function renderAudienceQueue() {
+            const list = document.getElementById('queueList');
+            const active = queue.filter(q => q.status !== 'completed');
+            if(active.length === 0) { 
+                list.innerHTML = "<div class='p-4 text-center bg-white/50 rounded-xl border border-zinc-200 text-zinc-400 text-sm'>目前尚無祈願，快來獻上第一首樂章吧！</div>"; 
+                return; 
+            }
+            list.innerHTML = active.map((q, i) => `
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-zinc-200/80">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-xs bg-zinc-900 text-white w-6 h-6 rounded-full flex items-center justify-center">${i+1}</span>
+                        <span class="font-bold text-zinc-800">${q.songName}</span>
+                        <span class="text-xs text-zinc-400">by ${q.requester}</span>
+                    </div>
+                    <div class="${q.status==='singing' ? 'status-singing' : 'text-xs text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full'}">
+                        ${q.status==='singing' ? '詠唱中 🕯️' : '等待降臨'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 前台渲染：已唱歌曲
+        function renderDoneList() {
+            const list = document.getElementById('doneList');
+            const done = queue.filter(q => q.status === 'completed');
+            if(done.length === 0) { list.innerHTML = "<div class='col-span-full text-zinc-400 text-xs p-2'>今日尚未有詠唱紀錄</div>"; return; }
+            list.innerHTML = done.map(q => `
+                <div class="bg-white/80 p-2.5 rounded-xl border border-zinc-200 truncate text-xs text-zinc-600 flex items-center gap-1" title="${q.songName}">
+                    <span>✝️</span> <span class="truncate">${q.songName}</span>
+                </div>
+            `).join('');
+        }
+
+        // 點歌邏輯
+        function openRequestModal(id) {
+            selectedSong = songs.find(s => s.id === id);
+            document.getElementById('targetSongName').innerText = selectedSong.name;
+            document.getElementById('requestModal').classList.add('active');
+        }
+
+        document.getElementById('confirmRequestBtn').onclick = () => {
+            const name = document.getElementById('requesterName').value;
+            if(!name) { alert('請簽下你的名字（暱稱）！'); return; }
+            db.ref('queue').push({ 
+                songId: selectedSong.id, 
+                songName: selectedSong.name, 
+                requester: name, 
+                message: document.getElementById('requestMsg').value, 
+                status: 'queued', 
+                time: Date.now() 
+            });
+            document.getElementById('requesterName').value = '';
+            document.getElementById('requestMsg').value = '';
+            closeModals(); 
+            showToast('契约已成，樂章加入待唱清單！');
+        };
+
+        // 管理後台邏輯
+        function renderAdminQueue() {
+            const active = queue.filter(q => q.status !== 'completed');
+            if(active.length === 0) {
+                document.getElementById('adminQueueList').innerHTML = `<p class="text-zinc-400 text-sm">目前無待處理點歌。</p>`;
+                return;
+            }
+            document.getElementById('adminQueueList').innerHTML = active.map(q => `
+                <div class="p-4 bg-zinc-50 rounded-xl border border-zinc-200">
+                    <div class="flex justify-between font-bold text-zinc-800">
+                        <span>${q.songName}</span>
+                        <span class="text-xs bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full">祈願者: ${q.requester}</span>
+                    </div>
+                    <div class="mt-2 text-xs bg-white p-2.5 rounded-lg text-zinc-600 border border-zinc-100 italic">💬 私語：${q.message || '（未留話）'}</div>
+                    <div class="mt-3 flex gap-2">
+                        <button class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2 rounded-lg text-xs font-bold transition" onclick="db.ref('queue/${q.id}').update({status:'singing'})">開始詠唱</button>
+                        <button class="flex-1 bg-stone-600 hover:bg-stone-500 text-white py-2 rounded-lg text-xs font-bold transition" onclick="completeSong('${q.id}', '${q.songId}')">詠唱完畢</button>
+                        <button class="bg-zinc-200 hover:bg-zinc-300 text-zinc-600 px-3 py-2 rounded-lg text-xs transition" onclick="db.ref('queue/${q.id}').remove()">驅散</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function completeSong(queueId, songId) {
+            db.ref('queue/' + queueId).update({ status: 'completed' });
+            if(songId) {
+                const songRef = db.ref('songs/' + songId + '/count');
+                songRef.transaction(currentCount => (currentCount || 0) + 1);
+            }
+        }
+
+        function clearDoneQueue() {
+            if(!confirm('確定要淨化今日所有已演唱紀錄嗎？')) return;
+            const doneItems = queue.filter(q => q.status === 'completed');
+            doneItems.forEach(item => { db.ref('queue/' + item.id).remove(); });
+            showToast('今日詠唱紀錄已淨化歸零');
+        }
+
+        function forceUpdate() {
+            render();
+            showToast('天平資料已重置同步');
+        }
+
+        function renderAdminSongs() {
+            document.getElementById('adminSongsList').innerHTML = songs.map(s => `
+                <div class="flex justify-between p-2.5 border-b border-zinc-100 hover:bg-zinc-50 items-center ${s.hidden ? 'opacity-40 bg-zinc-100' : ''}">
+                    <span class="font-medium text-zinc-700">${s.name} <small class="text-zinc-400">(${s.artist || '無'})</small></span>
+                    <div class="flex gap-2">
+                        <button class="text-[10px] px-2 py-1 rounded border ${s.hidden ? 'bg-zinc-600 text-white' : 'border-zinc-300 text-zinc-600'}" 
+                                onclick="db.ref('songs/${s.id}').update({hidden:${!s.hidden}})">
+                            ${s.hidden ? '🙈 封印中' : '👁️ 展示中'}
+                        </button>
+                        <button class="text-zinc-400 hover:text-red-500 text-xs px-1" onclick="if(confirm('確定從典籍中抹除？')) db.ref('songs/${s.id}').remove()">❌</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveSong() {
+            const name = document.getElementById('editName').value;
+            const artist = document.getElementById('editArtist').value;
+            const tags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map(el => el.value);
+            if(!name) return;
+            db.ref('songs').push({ name, artist, tags, count: 0 });
+            document.getElementById('editName').value = ''; 
+            document.getElementById('editArtist').value = '';
+            document.querySelectorAll('.tag-checkbox').forEach(el => el.checked = false);
+            closeModals();
+            showToast('樂章已順利收錄！');
+        }
+
+        // 搜尋與篩選事件
+        document.getElementById('searchInput').oninput = e => { searchQuery = e.target.value; renderAudienceSongs(); };
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderAudienceSongs();
+            };
+        });
+
+        // 模式切換與彈窗控制
+        function toggleMode() { document.getElementById('passwordModal').classList.add('active'); }
+        function checkPwd() {
+            // 管理密碼與原版一致
+            if(document.getElementById('adminPwd').value === 'pmdmnmkz4') {
+                isManagementMode = true;
+                document.getElementById('managementView').style.display = 'block';
+                document.getElementById('audienceView').style.display = 'none';
+                closeModals(); 
+                render();
+                showToast('已解鎖進入雙界後台');
+            } else { 
+                alert('鑰匙不匹配（密碼錯誤）'); 
+            }
+        }
+        function openSongModal() { document.getElementById('songEditModal').classList.add('active'); }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
+        function showToast(txt) {
+            const t = document.getElementById('toast');
+            t.innerText = txt; 
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>
