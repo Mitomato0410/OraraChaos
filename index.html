@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🕯️ 雙界唱禮 ‧ 半天半魔點歌殿堂 🗝️</title>
+    <title>🕯️ 雙界點歌殿堂 🗝️</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="icon.png" type="image/png">
@@ -232,9 +232,9 @@
     <!-- Header 頂欄 -->
     <div class="header">
         <h1 onclick="toggleMode()" style="cursor: pointer;" title="點擊切換管理模式">
-            ⚖️ 雙界唱禮 ‧ 點歌殿堂 🪶
+            🤍 點歌殿堂 🖤
         </h1>
-        <p>「 光芒與暗影交織的樂章，今夜為誰而唱？ 」</p>
+        <p> 光芒與暗影交織的樂章 </p>
     </div>
 
     <!-- 主體內容 -->
@@ -245,7 +245,7 @@
             <!-- 目前排隊清單 -->
             <div class="section-card">
                 <h3 class="font-bold mb-3 text-zinc-800 text-lg flex items-center gap-2">
-                    <span>📜</span> 祈願與契約 (排隊清單)
+                    <span>📜</span> 🕯️排隊清單
                 </h3>
                 <div id="queueList" class="space-y-2 text-zinc-500">載入中...</div>
             </div>
@@ -253,7 +253,7 @@
             <!-- 今日已演唱 -->
             <div class="section-card bg-white/70">
                 <h3 class="font-bold mb-3 text-zinc-500 text-sm flex items-center cursor-pointer hover:text-zinc-800 transition" onclick="document.getElementById('doneList').classList.toggle('hidden')">
-                    <span>🕯️</span> 今日已詠唱樂章 (點擊展開/收合)
+                    <span>🕯️</span> 今日已演唱歌曲 (點擊展開/收合)
                 </h3>
                 <div id="doneList" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-zinc-500 hidden"></div>
             </div>
@@ -277,8 +277,8 @@
         <div id="managementView" style="display:none;">
             <div class="bg-zinc-900 text-zinc-100 p-6 rounded-2xl mb-6 shadow-xl flex flex-wrap justify-between items-center gap-4 border border-zinc-700">
                 <div>
-                    <h2 class="text-2xl font-bold flex items-center gap-2">⚖️ 審判與調和後台 👑</h2>
-                    <p class="text-xs text-zinc-400 mt-1">光暗天平平衡中 ‧ 資料即時同步</p>
+                    <h2 class="text-2xl font-bold flex items-center gap-2"> 🤡後台 </h2>
+                    <p class="text-xs text-zinc-400 mt-1">資料即時同步</p>
                 </div>
                 <div class="flex gap-2">
                     <button class="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition" onclick="forceUpdate()">🔄 刷新天平</button>
@@ -289,11 +289,11 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
-                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800">📋 待詠唱清單 (點歌隊列)</h3>
+                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800"> 🕯️排隊清單 </h3>
                     <div id="adminQueueList" class="space-y-4"></div>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
-                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800">📖 雙界歌典典藏 (歌單庫)</h3>
+                    <h3 class="font-bold mb-4 border-b pb-2 text-zinc-800"> 📖 歌單 </h3>
                     <div id="adminSongsList" class="space-y-1 text-sm overflow-y-auto max-h-[500px]"></div>
                 </div>
             </div>
@@ -303,12 +303,11 @@
     <!-- 點歌 Modal -->
     <div class="modal" id="requestModal">
         <div class="modal-content">
-            <h3 class="text-xl font-bold mb-1 text-zinc-900">詠唱祈願</h3>
-            <p class="text-xs text-zinc-400 mb-4">獻上你的名字與心聲，簽訂點歌契約。</p>
+            <h3 class="text-xl font-bold mb-1 text-zinc-900">點歌確認</h3>
             <p id="targetSongName" class="text-zinc-800 font-bold text-lg mb-2 p-3 bg-zinc-100 rounded-xl border border-zinc-200"></p>
             <input type="text" id="requesterName" class="form-input" placeholder="你的名字 / 稱呼 (必填)">
-            <textarea id="requestMsg" class="form-input h-24 resize-none" placeholder="想對雙界歌者說的話 (選填)"></textarea>
-            <button class="request-btn" id="confirmRequestBtn">簽訂契約 ‧ 送出點歌 ✝️</button>
+            <textarea id="requestMsg" class="form-input h-24 resize-none" placeholder="想對傲拉拉說的話 (選填)"></textarea>
+            <button class="request-btn" id="confirmRequestBtn"> 確認點歌 ✝️</button>
             <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">取消</button>
         </div>
     </div>
@@ -316,16 +315,16 @@
     <!-- 新增歌曲 Modal -->
     <div class="modal" id="songEditModal">
         <div class="modal-content">
-            <h3 class="text-xl font-bold mb-4 text-zinc-900">新增樂章至典籍</h3>
+            <h3 class="text-xl font-bold mb-4 text-zinc-900">新增</h3>
             <input type="text" id="editName" class="form-input" placeholder="歌名">
             <input type="text" id="editArtist" class="form-input" placeholder="原唱 / 歌手">
-            <div class="mt-4 text-sm font-bold text-zinc-600">屬性分類：</div>
+            <div class="mt-4 text-sm font-bold text-zinc-600">分類：</div>
             <div class="flex gap-2 mt-2">
                 <label><input type="checkbox" class="tag-checkbox" value="中文歌"><span class="tag-chip">中文</span></label>
                 <label><input type="checkbox" class="tag-checkbox" value="日文歌"><span class="tag-chip">日文</span></label>
                 <label><input type="checkbox" class="tag-checkbox" value="英文歌"><span class="tag-chip">英文</span></label>
             </div>
-            <button class="request-btn" onclick="saveSong()">載入典冊</button>
+            <button class="request-btn" onclick="saveSong()">載入歌單</button>
             <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">取消</button>
         </div>
     </div>
@@ -334,9 +333,9 @@
     <div class="modal" id="passwordModal">
         <div class="modal-content">
             <h3 class="text-xl font-bold mb-2 text-zinc-900">管理者解鎖</h3>
-            <p class="text-xs text-zinc-400 mb-4">請輸入進入黑白後台之鑰匙密碼</p>
+            <p class="text-xs text-zinc-400 mb-4">請輸入密碼</p>
             <input type="password" id="adminPwd" class="form-input" placeholder="請輸入管理密碼">
-            <button class="request-btn" onclick="checkPwd()">開啟通道</button>
+            <button class="request-btn" onclick="checkPwd()">進入</button>
             <button class="w-full mt-3 text-zinc-400 text-sm hover:text-zinc-600 transition" onclick="closeModals()">返回前台</button>
         </div>
     </div>
@@ -397,7 +396,7 @@
             }
             
             if(filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 text-zinc-400">尚未尋得相符之樂章...</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-zinc-400">尚未尋得相符內容...</div>`;
                 return;
             }
 
@@ -405,11 +404,11 @@
                 <div class="song-card">
                     <div>
                         <div class="song-name">${s.name}</div>
-                        <div class="text-zinc-400 text-sm mb-3">${s.artist || '未知吟唱者'}</div>
+                        <div class="text-zinc-400 text-sm mb-3">${s.artist || '未知'}</div>
                         <div class="flex gap-1 mb-3">${(s.tags || []).map(t => `<span class="px-2 py-0.5 bg-zinc-100 text-zinc-600 text-[10px] rounded-full border border-zinc-200">${t}</span>`).join('')}</div>
-                        <div class="text-[11px] text-zinc-400 flex items-center gap-1">🕊️ 累計詠唱：<span class="font-bold text-zinc-700">${s.count || 0}</span> 次</div>
+                        <div class="text-[11px] text-zinc-400 flex items-center gap-1">🕊️ 累計次數：<span class="font-bold text-zinc-700">${s.count || 0}</span> 次</div>
                     </div>
-                    <button class="request-btn" onclick="openRequestModal('${s.id}')">祈願點歌 ♪</button>
+                    <button class="request-btn" onclick="openRequestModal('${s.id}')">確認點歌 ♪</button>
                 </div>
             `).join('');
         }
@@ -419,7 +418,7 @@
             const list = document.getElementById('queueList');
             const active = queue.filter(q => q.status !== 'completed');
             if(active.length === 0) { 
-                list.innerHTML = "<div class='p-4 text-center bg-white/50 rounded-xl border border-zinc-200 text-zinc-400 text-sm'>目前尚無祈願，快來獻上第一首樂章吧！</div>"; 
+                list.innerHTML = "<div class='p-4 text-center bg-white/50 rounded-xl border border-zinc-200 text-zinc-400 text-sm'>目前沒人在排隊唷，快來點一首！</div>"; 
                 return; 
             }
             list.innerHTML = active.map((q, i) => `
@@ -430,7 +429,7 @@
                         <span class="text-xs text-zinc-400">by ${q.requester}</span>
                     </div>
                     <div class="${q.status==='singing' ? 'status-singing' : 'text-xs text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full'}">
-                        ${q.status==='singing' ? '詠唱中 🕯️' : '等待降臨'}
+                        ${q.status==='singing' ? '演唱中 🕯️' : '等待中'}
                     </div>
                 </div>
             `).join('');
@@ -440,7 +439,7 @@
         function renderDoneList() {
             const list = document.getElementById('doneList');
             const done = queue.filter(q => q.status === 'completed');
-            if(done.length === 0) { list.innerHTML = "<div class='col-span-full text-zinc-400 text-xs p-2'>今日尚未有詠唱紀錄</div>"; return; }
+            if(done.length === 0) { list.innerHTML = "<div class='col-span-full text-zinc-400 text-xs p-2'>今日尚未有紀錄</div>"; return; }
             list.innerHTML = done.map(q => `
                 <div class="bg-white/80 p-2.5 rounded-xl border border-zinc-200 truncate text-xs text-zinc-600 flex items-center gap-1" title="${q.songName}">
                     <span>✝️</span> <span class="truncate">${q.songName}</span>
@@ -457,7 +456,7 @@
 
         document.getElementById('confirmRequestBtn').onclick = () => {
             const name = document.getElementById('requesterName').value;
-            if(!name) { alert('請簽下你的名字（暱稱）！'); return; }
+            if(!name) { alert('請輸入你的名字（暱稱）！'); return; }
             db.ref('queue').push({ 
                 songId: selectedSong.id, 
                 songName: selectedSong.name, 
@@ -469,7 +468,7 @@
             document.getElementById('requesterName').value = '';
             document.getElementById('requestMsg').value = '';
             closeModals(); 
-            showToast('契约已成，樂章加入待唱清單！');
+            showToast('點歌成功，加入待唱清單！');
         };
 
         // 管理後台邏輯
@@ -483,7 +482,7 @@
                 <div class="p-4 bg-zinc-50 rounded-xl border border-zinc-200">
                     <div class="flex justify-between font-bold text-zinc-800">
                         <span>${q.songName}</span>
-                        <span class="text-xs bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full">祈願者: ${q.requester}</span>
+                        <span class="text-xs bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full">點歌者: ${q.requester}</span>
                     </div>
                     <div class="mt-2 text-xs bg-white p-2.5 rounded-lg text-zinc-600 border border-zinc-100 italic">💬 私語：${q.message || '（未留話）'}</div>
                     <div class="mt-3 flex gap-2">
@@ -504,15 +503,15 @@
         }
 
         function clearDoneQueue() {
-            if(!confirm('確定要淨化今日所有已演唱紀錄嗎？')) return;
+            if(!confirm('確定要清空今日所有已演唱紀錄嗎？')) return;
             const doneItems = queue.filter(q => q.status === 'completed');
             doneItems.forEach(item => { db.ref('queue/' + item.id).remove(); });
-            showToast('今日詠唱紀錄已淨化歸零');
+            showToast('今日演唱紀錄已歸零');
         }
 
         function forceUpdate() {
             render();
-            showToast('天平資料已重置同步');
+            showToast('資料已重置同步');
         }
 
         function renderAdminSongs() {
@@ -524,7 +523,7 @@
                                 onclick="db.ref('songs/${s.id}').update({hidden:${!s.hidden}})">
                             ${s.hidden ? '🙈 封印中' : '👁️ 展示中'}
                         </button>
-                        <button class="text-zinc-400 hover:text-red-500 text-xs px-1" onclick="if(confirm('確定從典籍中抹除？')) db.ref('songs/${s.id}').remove()">❌</button>
+                        <button class="text-zinc-400 hover:text-red-500 text-xs px-1" onclick="if(confirm('確定從歌單中刪除？')) db.ref('songs/${s.id}').remove()">❌</button>
                     </div>
                 </div>
             `).join('');
@@ -540,7 +539,7 @@
             document.getElementById('editArtist').value = '';
             document.querySelectorAll('.tag-checkbox').forEach(el => el.checked = false);
             closeModals();
-            showToast('樂章已順利收錄！');
+            showToast('歌曲已順利收錄！');
         }
 
         // 搜尋與篩選事件
@@ -564,9 +563,9 @@
                 document.getElementById('audienceView').style.display = 'none';
                 closeModals(); 
                 render();
-                showToast('已解鎖進入雙界後台');
+                showToast('已解鎖進入後台');
             } else { 
-                alert('鑰匙不匹配（密碼錯誤）'); 
+                alert('密碼錯誤'); 
             }
         }
         function openSongModal() { document.getElementById('songEditModal').classList.add('active'); }
